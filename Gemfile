@@ -32,6 +32,7 @@ group :development, :test do
   gem 'rake'
   gem 'rspec-rails'
   gem 'factory_bot_rails'
+  gem 'fast_jsonapi'
 end
 
 group :development do
