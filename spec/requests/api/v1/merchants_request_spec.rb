@@ -13,6 +13,14 @@ describe 'Merchants API' do
     expect(merchants["data"].count).to eq(5)
   end
 
+  it 'can show an individual merchant' do
+    merchant = create(:merchant)
+# binding.pry
+    get "/api/v1/merchants/#{merchant.id}"
+
+    expect(response).to be_successful
+  end
+
   it 'returns top 5 merchants by revenue' do
     merch1 = create(:merchant)
     merch2 = create(:merchant)
