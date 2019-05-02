@@ -13,4 +13,13 @@ describe 'Items API' do
 
     expect(items["data"].count).to eq(5)
   end
+
+  it 'can show an individual item' do
+    merchant = create(:merchant)
+    item = create(:item, merchant_id: merchant.id)
+# binding.pry
+    get "/api/v1/items/#{item.id}"
+
+    expect(response).to be_successful
+  end
 end

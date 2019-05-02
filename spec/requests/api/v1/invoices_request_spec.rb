@@ -14,4 +14,14 @@ describe 'Invoices API' do
 
     expect(invoices["data"].count).to eq(5)
   end
+
+  it 'can show an individual invoice' do
+    customer1 = create(:customer)
+    merchant = create(:merchant)
+    invoice = create(:invoice, merchant_id: merchant.id, customer_id: customer1.id)
+# binding.pry
+    get "/api/v1/invoices/#{invoice.id}"
+
+    expect(response).to be_successful
+  end
 end
