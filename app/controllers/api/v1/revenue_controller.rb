@@ -9,5 +9,4 @@ class Api::V1::RevenueController < ApplicationController
       render json: {"data" => {"attributes" => {"revenue" => merch.total_revenue_by_date(merch.id, params["date"])}}}
     end
   end
-
 end

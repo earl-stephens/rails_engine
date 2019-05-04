@@ -26,6 +26,7 @@ class Merchant < ApplicationRecord
     finish = date.to_datetime.end_of_day
     revenue = Invoice.joins(:invoice_items, :transactions)
                      .merge(Transaction.successful)
+
                      .where(:created_at => start..finish)
                      .sum('invoice_items.quantity * invoice_items.unit_price')
     # binding.pry
@@ -44,7 +45,6 @@ class Merchant < ApplicationRecord
   end
 
   def total_revenue_by_date(id, date)
-    # binding.pry
     start_date = date.to_datetime
     end_date = date.to_datetime.end_of_day
     revenue = Merchant.joins(invoices: [:invoice_items, :transactions])
