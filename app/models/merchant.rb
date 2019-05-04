@@ -24,24 +24,36 @@ class Merchant < ApplicationRecord
   def self.revenue_by_date(date)
     start = date.to_datetime
     finish = date.to_datetime.end_of_day
-    # binding.pry
-    #Merchant.joins(invoices: :invoice_items).where(invoices: {created_at: start..finish})
-    #InvoiceItem.joins(:invoice).select("invoice_items.*, sum(invoice_items.quantity * invoice_items.price) as revenue").group(:id)
-    # returned_invoices = Invoice.joins(:invoice_items, :transactions)
-    #                            .select("invoices.*, sum(invoice_items.quantity * invoice_items.unit_price) as revenue")
-    #                            .where(transactions: {result: 'success'})
-    #                            .where(:created_at => start..finish)
     revenue = Invoice.joins(:invoice_items, :transactions)
-                     .where(transactions: {result: 'success'})
+                     .merge(Transaction.successful)
+
                      .where(:created_at => start..finish)
-                     .sum('invoice_items.quantity * invoice_items.unit_price').round(2)
-    # Invoice.joins(:invoice_items, :transactions).where(transactions: {result: 'success'}).where(:created_at => start..finish).select('invoices.*, sum(invoice_items.quantity * invoice_items.unit_price) as revenue')
+                     .sum('invoice_items.quantity * invoice_items.unit_price')
     # binding.pry
-    # total_revenue = 0
-    # returned_invoices.each do |invoice|
-    #   total_revenue = total_revenue += invoice.revenue
-    # end
-    # total_revenue.to_f.round(2)
-    revenue = (revenue.to_f/100).round(2)
+    revenue = (revenue.to_f)/100
+  end
+
+  def total_revenue(id)
+    # binding.pry
+    revenue = Merchant.joins(invoices: [:invoice_items, :transactions])
+                      .where(id: id)
+                      .merge(Transaction.successful)
+                      .sum('invoice_items.quantity * invoice_items.unit_price')
+                      # binding.pry
+    revenue = (revenue.to_f)/100.round(2)
+    revenue.to_s
+  end
+
+  def total_revenue_by_date(id, date)
+    start_date = date.to_datetime
+    end_date = date.to_datetime.end_of_day
+    revenue = Merchant.joins(invoices: [:invoice_items, :transactions])
+                      .where(id: id)
+                      .where(invoices: {created_at: start_date..end_date})
+                      .merge(Transaction.successful)
+                      .sum('invoice_items.quantity * invoice_items.unit_price')
+                      # binding.pry
+    revenue = (revenue.to_f)/100.round(2)
+    revenue.to_s
   end
 end
