@@ -31,7 +31,7 @@ class Merchant < ApplicationRecord
     #                            .select("invoices.*, sum(invoice_items.quantity * invoice_items.unit_price) as revenue")
     #                            .where(transactions: {result: 'success'})
     #                            .where(:created_at => start..finish)
-    Invoice.joins(:invoice_items, :transactions)
+    revenue = Invoice.joins(:invoice_items, :transactions)
                      .where(transactions: {result: 'success'})
                      .where(:created_at => start..finish)
                      .sum('invoice_items.quantity * invoice_items.unit_price').round(2)
@@ -42,5 +42,6 @@ class Merchant < ApplicationRecord
     #   total_revenue = total_revenue += invoice.revenue
     # end
     # total_revenue.to_f.round(2)
+    revenue = (revenue.to_f/100).round(2)
   end
 end
