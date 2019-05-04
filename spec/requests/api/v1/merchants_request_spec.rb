@@ -79,8 +79,11 @@ describe 'Merchants API' do
       expect(merchants_data["data"].third["id"]).to eq(@merch4.id.to_s)
     end
 
-    xit 'returns total revenue for a particular date' do
+    it 'returns total revenue for a particular date' do
       get '/api/v1/merchants/revenue?date=2019-02-07'
+
+      expect(response).to be_successful
+      # binding.pry
     end
   end
 end

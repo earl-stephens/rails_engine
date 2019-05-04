@@ -52,7 +52,7 @@ RSpec.describe Merchant, type: :model do
     it '.revenue_by_date' do
       date = '2019-02-07'
 
-      expect(Merchant.revenue_by_date(date)).to eq(44)
+      expect(Merchant.revenue_by_date(date)).to eq(44.00)
     end
   end
 end
