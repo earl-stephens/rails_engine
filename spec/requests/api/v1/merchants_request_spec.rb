@@ -36,12 +36,12 @@ describe 'Merchants API' do
       @item5 = @merch5.items.create!(name: 'item5', description: 'first item', unit_price: 25)
       @item6 = @merch6.items.create!(name: 'item6', description: 'first item', unit_price: 30)
       @customer = create(:customer)
-      @invoice1 = @customer.invoices.create!(status: 'shipped', merchant_id: @merch1.id)
-      @invoice2 = @customer.invoices.create!(status: 'shipped', merchant_id: @merch2.id)
-      @invoice3 = @customer.invoices.create!(status: 'shipped', merchant_id: @merch3.id)
-      @invoice4 = @customer.invoices.create!(status: 'shipped', merchant_id: @merch4.id)
-      @invoice5 = @customer.invoices.create!(status: 'shipped', merchant_id: @merch5.id)
-      @invoice6 = @customer.invoices.create!(status: 'shipped', merchant_id: @merch6.id)
+      @invoice1 = @customer.invoices.create!(status: 'shipped', merchant_id: @merch1.id, created_at: '2019-02-07 12:54:24 -0500', updated_at: '2019-02-07 12:54:24 -0500')
+      @invoice2 = @customer.invoices.create!(status: 'shipped', merchant_id: @merch2.id, created_at: '2019-02-07 12:54:24 -0500', updated_at: '2019-02-07 12:54:24 -0500')
+      @invoice3 = @customer.invoices.create!(status: 'shipped', merchant_id: @merch3.id, created_at: '2019-02-08 12:54:24 -0500', updated_at: '2019-02-08 12:54:24 -0500')
+      @invoice4 = @customer.invoices.create!(status: 'shipped', merchant_id: @merch4.id, created_at: '2019-02-08 12:54:24 -0500', updated_at: '2019-02-08 12:54:24 -0500')
+      @invoice5 = @customer.invoices.create!(status: 'shipped', merchant_id: @merch5.id, created_at: '2019-02-09 12:54:24 -0500', updated_at: '2019-02-09 12:54:24 -0500')
+      @invoice6 = @customer.invoices.create!(status: 'shipped', merchant_id: @merch6.id, created_at: '2019-02-09 12:54:24 -0500', updated_at: '2019-02-09 12:54:24 -0500')
       @i_i1 = InvoiceItem.create!(quantity: 2, unit_price: 6, item_id: @item1.id, invoice_id: @invoice1.id)
       @i_i2 = InvoiceItem.create!(quantity: 4, unit_price: 8, item_id: @item2.id, invoice_id: @invoice2.id)
       @i_i3 = InvoiceItem.create!(quantity: 6, unit_price: 10, item_id: @item3.id, invoice_id: @invoice3.id)
@@ -77,6 +77,13 @@ describe 'Merchants API' do
       expect(merchants_data["data"].first["id"]).to eq(@merch6.id.to_s)
       expect(merchants_data["data"].second["id"]).to eq(@merch5.id.to_s)
       expect(merchants_data["data"].third["id"]).to eq(@merch4.id.to_s)
+    end
+
+    it 'returns total revenue for a particular date' do
+      get '/api/v1/merchants/revenue?date=2019-02-07'
+
+      expect(response).to be_successful
+      # binding.pry
     end
   end
 end
