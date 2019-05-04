@@ -36,13 +36,13 @@ describe 'Merchants API' do
       @item5 = @merch5.items.create!(name: 'item5', description: 'first item', unit_price: 2500)
       @item6 = @merch6.items.create!(name: 'item6', description: 'first item', unit_price: 3000)
       @customer = create(:customer)
-      @customer2 = create(:customer)
-      @customer3 = create(:customer)
+      @customer2 = create(:customer, first_name: "Joe")
+      @customer3 = create(:customer, first_name: "Jim")
       @invoice1 = @customer.invoices.create!(status: 'shipped', merchant_id: @merch1.id, created_at: '2019-02-07 12:54:24 -0500', updated_at: '2019-02-07 12:54:24 -0500')
       @invoice2 = @customer.invoices.create!(status: 'shipped', merchant_id: @merch2.id, created_at: '2019-02-07 12:54:24 -0500', updated_at: '2019-02-07 12:54:24 -0500')
       @invoice3 = @customer.invoices.create!(status: 'shipped', merchant_id: @merch3.id, created_at: '2019-02-08 12:54:24 -0500', updated_at: '2019-02-08 12:54:24 -0500')
       @invoice4 = @customer.invoices.create!(status: 'shipped', merchant_id: @merch4.id, created_at: '2019-02-08 12:54:24 -0500', updated_at: '2019-02-08 12:54:24 -0500')
-      @invoice5 = @customer.invoices.create!(status: 'shipped', merchant_id: @merch5.id, created_at: '2019-02-09 12:54:24 -0500', updated_at: '2019-02-09 12:54:24 -0500')
+      @invoice5 = @customer2.invoices.create!(status: 'shipped', merchant_id: @merch5.id, created_at: '2019-02-09 12:54:24 -0500', updated_at: '2019-02-09 12:54:24 -0500')
       @invoice6 = @customer2.invoices.create!(status: 'shipped', merchant_id: @merch6.id, created_at: '2019-02-10 12:54:24 -0500', updated_at: '2019-02-10 12:54:24 -0500')
       @invoice7 = @customer3.invoices.create!(status: 'shipped', merchant_id: @merch6.id, created_at: '2019-02-11 12:54:24 -0500', updated_at: '2019-02-11 12:54:24 -0500')
       @invoice8 = @customer3.invoices.create!(status: 'shipped', merchant_id: @merch6.id, created_at: '2019-02-12 12:54:24 -0500', updated_at: '2019-02-12 12:54:24 -0500')
@@ -94,14 +94,12 @@ describe 'Merchants API' do
       get '/api/v1/merchants/revenue?date=2019-02-07'
 
       expect(response).to be_successful
-      # binding.pry
     end
 
     it 'gives total revenue for a single merchant' do
       get "/api/v1/merchants/#{@merch3.id}/revenue"
 
       revenue = JSON.parse(response.body)
-
 
       expect(response).to be_successful
       expect(revenue["data"]["attributes"]["revenue"]).to eq("60.0")
@@ -114,7 +112,21 @@ describe 'Merchants API' do
 
       expect(response).to be_successful
       expect(revenue["data"]["attributes"]["revenue"]).to eq("32.0")
+    end
 
+    it 'shows favorite customer for a particular merchant' do
+      get "/api/v1/merchants/#{@merch6.id}/favorite_customer"
+# binding.pry
+      customer = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(customer["data"]["attributes"]["id"]).to eq(@customer3.id)
+
+      get "/api/v1/merchants/#{@merch5.id}/favorite_customer"
+
+      customer2 = JSON.parse(response.body)
+      expect(customer2["data"]["attributes"]["id"]).to eq(@customer2.id)
+      # binding.pry
     end
   end
 end
