@@ -43,4 +43,12 @@ class Merchant < ApplicationRecord
     # end
     # total_revenue.to_f.round(2)
   end
+
+  def total_revenue(id)
+    # binding.pry
+    Merchant.joins(invoices: [:invoice_items, :transactions])
+            .where(id: id)
+            .where(transactions: {result: 'success'})
+            .sum('invoice_items.quantity * invoice_items.unit_price')
+  end
 end
