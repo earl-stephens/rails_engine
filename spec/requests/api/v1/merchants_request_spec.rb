@@ -20,6 +20,7 @@ describe 'Merchants API' do
 
     expect(response).to be_successful
   end
+  
   describe 'single finders' do
     before :each do
       @merchant1 = create(:merchant, created_at: "2019-05-04T14:54:05.000Z", updated_at: "2019-05-04T15:54:05.000Z")
