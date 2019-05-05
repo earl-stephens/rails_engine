@@ -232,4 +232,38 @@ describe 'Merchants API' do
       # binding.pry
     end
   end
+
+  describe 'relationship endpoints' do
+    before :each do
+      @customer = create(:customer)
+      @merch1 = create(:merchant)
+      @merch2 = create(:merchant)
+      @item1 = create(:item, merchant_id: @merch1.id)
+      @item2 = create(:item, merchant_id: @merch1.id)
+      @item3 = create(:item, merchant_id: @merch2.id)
+      @item4 = create(:item, merchant_id: @merch2.id)
+      @item5 = create(:item, merchant_id: @merch2.id)
+      @invoice1 = create(:invoice, customer_id: @customer.id, merchant_id: @merch1.id)
+      @invoice2 = create(:invoice, customer_id: @customer.id, merchant_id: @merch1.id)
+      @invoice3 = create(:invoice, customer_id: @customer.id, merchant_id: @merch1.id)
+      @invoice4 = create(:invoice, customer_id: @customer.id, merchant_id: @merch2.id)
+      @invoice5 = create(:invoice, customer_id: @customer.id, merchant_id: @merch2.id)
+    end
+
+    it 'returns items for a particular merchant' do
+      get "/api/v1/merchants/#{@merch1.id}/items"
+
+      items = JSON.parse(response.body)
+# binding.pry
+      expect(response).to be_successful
+    end
+
+    it 'returns invoices for a particular merchant' do
+      get "/api/v1/merchants/#{@merch2.id}/invoices"
+
+      invoices = JSON.parse(response.body)
+
+      expect(response).to be_successful
+    end
+  end
 end
