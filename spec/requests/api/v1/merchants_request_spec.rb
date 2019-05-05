@@ -20,6 +20,49 @@ describe 'Merchants API' do
 
     expect(response).to be_successful
   end
+  describe 'single finders' do
+    before :each do
+      @merchant1 = create(:merchant, created_at: "2019-05-04T14:54:05.000Z", updated_at: "2019-05-04T15:54:05.000Z")
+      @merchant2 = create(:merchant, created_at: "2019-05-03T14:54:05.000Z", updated_at: "2019-05-03T15:54:05.000Z")
+      @merchant3 = create(:merchant, created_at: "2019-05-02T14:54:05.000Z", updated_at: "2019-05-02T15:54:05.000Z")
+    end
+
+    it 'can find merchant by id' do
+      get "/api/v1/merchants/find?id=#{@merchant2.id}"
+
+      merch = JSON.parse(response.body)
+# binding.pry
+      expect(response).to be_successful
+      expect(merch["data"]["attributes"]["id"]).to eq(@merchant2.id)
+    end
+
+    it 'can find merchant by name' do
+      get "/api/v1/merchants/find?name=#{@merchant2.name}"
+
+      merch = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(merch["data"]["attributes"]["name"]).to eq(@merchant2.name)
+    end
+
+    it 'can find merchant by created at time' do
+      get "/api/v1/merchants/find?created_at=#{@merchant1.created_at}"
+
+      merch = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(merch["data"]["attributes"]["name"]).to eq(@merchant1.name)
+    end
+
+    it 'can find merchant by updated at time' do
+      get "/api/v1/merchants/find?updated_at=#{@merchant3.updated_at}"
+
+      merch = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(merch["data"]["attributes"]["name"]).to eq(@merchant3.name)
+    end
+  end
 
   describe 'biz intel methods' do
     before :each do
