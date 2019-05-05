@@ -63,6 +63,14 @@ describe 'Merchants API' do
       expect(response).to be_successful
       expect(merch["data"]["attributes"]["name"]).to eq(@merchant3.name)
     end
+
+    it 'can find a random merchant' do
+      get '/api/v1/merchants/random'
+
+      merch = JSON.parse(response.body)
+
+      expect(response).to be_successful
+    end
   end
 
   describe 'multi finders' do

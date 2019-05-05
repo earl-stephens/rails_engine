@@ -8,6 +8,7 @@ Rails.application.routes.draw do
         get 'revenue', to: 'revenue#show'
         get 'find', to: 'search#show'
         get 'find_all', to: 'search#index'
+        get 'random', to: 'search#show'
       end
       namespace :items do
         get 'most_revenue', to: 'most_revenue#index'
