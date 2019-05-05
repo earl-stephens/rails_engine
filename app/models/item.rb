@@ -11,4 +11,14 @@ class Item < ApplicationRecord
         .order('revenue DESC')
         .limit(quantity)
   end
+
+  def self.most_items_sold(quantity)
+    Item.joins(invoice_items: [invoice: :transactions])
+        .merge(Transaction.successful)
+        .select('items.*, sum(invoice_items.quantity) as num_sold')
+        .group(:id)
+        .order('num_sold DESC')
+        .limit(quantity)
+    # binding.pry
+  end
 end
