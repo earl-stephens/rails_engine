@@ -45,12 +45,12 @@ describe 'Items API' do
       @i_i1 = InvoiceItem.create!(quantity: 2, unit_price: 600, item_id: @item1.id, invoice_id: @invoice1.id)
       @i_i2 = InvoiceItem.create!(quantity: 4, unit_price: 800, item_id: @item2.id, invoice_id: @invoice2.id)
       @i_i3 = InvoiceItem.create!(quantity: 6, unit_price: 1000, item_id: @item3.id, invoice_id: @invoice3.id)
-      @i_i4 = InvoiceItem.create!(quantity: 8, unit_price: 1200, item_id: @item4.id, invoice_id: @invoice4.id)
+      @i_i4 = InvoiceItem.create!(quantity: 7, unit_price: 1200, item_id: @item4.id, invoice_id: @invoice4.id)
       @i_i5 = InvoiceItem.create!(quantity: 10, unit_price: 1400, item_id: @item5.id, invoice_id: @invoice5.id)
       @i_i6 = InvoiceItem.create!(quantity: 3, unit_price: 160, item_id: @item6.id, invoice_id: @invoice6.id)
       @i_i6 = InvoiceItem.create!(quantity: 5, unit_price: 170, item_id: @item5.id, invoice_id: @invoice7.id)
       @i_i6 = InvoiceItem.create!(quantity: 7, unit_price: 180, item_id: @item4.id, invoice_id: @invoice8.id)
-      @i_i6 = InvoiceItem.create!(quantity: 9, unit_price: 190, item_id: @item3.id, invoice_id: @invoice9.id)
+      @i_i6 = InvoiceItem.create!(quantity: 7, unit_price: 190, item_id: @item3.id, invoice_id: @invoice9.id)
       @transaction1 = @invoice1.transactions.create!(credit_card_number: 1234, credit_card_expiration_date: Time.now, result: 'success')
       @transaction2 = @invoice2.transactions.create!(credit_card_number: 2345, credit_card_expiration_date: Time.now, result: 'success')
       @transaction3 = @invoice3.transactions.create!(credit_card_number: 3456, credit_card_expiration_date: Time.now, result: 'success')
@@ -64,6 +64,16 @@ describe 'Items API' do
 
     it 'shows top 5 items by total revenue generated' do
       get "/api/v1/items/most_revenue?quantity=5"
+
+      items = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(items["data"].first["attributes"]["id"]).to eq(@item5.id)
+      expect(items["data"].first["attributes"]["name"]).to eq(@item5.name)
+    end
+
+    it 'shows top 5 items by total number sold' do
+      get "/api/v1/items/most_items?quantity=5"
 
       items = JSON.parse(response.body)
 
