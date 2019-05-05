@@ -20,7 +20,7 @@ describe 'Merchants API' do
 
     expect(response).to be_successful
   end
-  
+
   describe 'single finders' do
     before :each do
       @merchant1 = create(:merchant, created_at: "2019-05-04T14:54:05.000Z", updated_at: "2019-05-04T15:54:05.000Z")
@@ -62,6 +62,57 @@ describe 'Merchants API' do
 
       expect(response).to be_successful
       expect(merch["data"]["attributes"]["name"]).to eq(@merchant3.name)
+    end
+  end
+
+  describe 'multi finders' do
+    before :each do
+      @merch1 = create(:merchant)
+      @merch2 = create(:merchant, name: "Joe")
+      @merch3 = create(:merchant, name: "Joe")
+      @merch4 = create(:merchant, created_at: "2019-05-04T14:54:05.000Z", updated_at: "2019-05-04T15:54:05.000Z")
+      @merch5 = create(:merchant, created_at: "2019-05-04T14:54:05.000Z", updated_at: "2019-05-03T15:54:05.000Z")
+      @merch6 = create(:merchant, created_at: "2019-05-03T14:54:05.000Z", updated_at: "2019-05-03T15:54:05.000Z")
+    end
+
+    it 'finds all by id' do
+      get "/api/v1/merchants/find_all?id=#{@merch1.id}"
+
+      merch = JSON.parse(response.body)
+      # binding.pry
+
+      expect(response).to be_successful
+      expect(merch["data"].first["attributes"]["name"]).to eq(@merch1.name)
+    end
+
+    it 'finds all by name' do
+      get "/api/v1/merchants/find_all?name=#{@merch2.name}"
+
+      merch = JSON.parse(response.body)
+      # binding.pry
+
+      expect(response).to be_successful
+      expect(merch["data"].first["attributes"]["name"]).to eq(@merch2.name)
+    end
+
+    it 'finds all by created at' do
+      get "/api/v1/merchants/find_all?created_at='2019-05-04T14:54:05.000Z'"
+
+      merch = JSON.parse(response.body)
+      # binding.pry
+
+      expect(response).to be_successful
+      expect(merch["data"].first["attributes"]["name"]).to eq(@merch4.name)
+    end
+
+    it 'finds all by updated at' do
+      get "/api/v1/merchants/find_all?updated_at='2019-05-03T15:54:05.000Z'"
+
+      merch = JSON.parse(response.body)
+      # binding.pry
+
+      expect(response).to be_successful
+      expect(merch["data"].first["attributes"]["name"]).to eq(@merch5.name)
     end
   end
 

@@ -1,5 +1,10 @@
 class Api::V1::Merchants::SearchController < ApplicationController
 
+  def index
+    # binding.pry
+    render json: MerchantFinderSerializer.new(Merchant.where(merch_params))
+  end
+
   def show
     if params[:id] != nil
       render json: MerchantFinderSerializer.new(Merchant.find(params[:id]))

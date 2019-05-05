@@ -7,6 +7,7 @@ Rails.application.routes.draw do
         get 'most_items', to: 'most_items#index'
         get 'revenue', to: 'revenue#show'
         get 'find', to: 'search#show'
+        get 'find_all', to: 'search#index'
       end
       namespace :items do
         get 'most_revenue', to: 'most_revenue#index'
