@@ -23,6 +23,79 @@ describe 'Items API' do
     expect(response).to be_successful
   end
 
+  describe 'single finders' do
+    before :each do
+      @merchant1 = create(:merchant)
+      @item1 = create(:item, unit_price: 55, merchant_id: @merchant1.id, created_at: "2019-05-04T14:54:05.000Z", updated_at: "2019-05-04T15:54:05.000Z")
+      @item2 = create(:item, merchant_id: @merchant1.id, created_at: "2019-05-03T14:54:05.000Z", updated_at: "2019-05-03T15:54:05.000Z")
+      @item3 = create(:item, merchant_id: @merchant1.id, created_at: "2019-05-02T14:54:05.000Z", updated_at: "2019-05-02T15:54:05.000Z")
+      @item4 = create(:item, description: "Item 4", merchant_id: @merchant1.id, created_at: "2019-05-01T14:54:05.000Z", updated_at: "2019-05-01T15:54:05.000Z")
+    end
+
+    it 'can find item by id' do
+      get "/api/v1/items/find?id=#{@item2.id}"
+
+      item = JSON.parse(response.body)
+# binding.pry
+      expect(response).to be_successful
+      expect(item["data"]["attributes"]["id"]).to eq(@item2.id)
+    end
+
+    it 'can find item by name' do
+      get "/api/v1/items/find?name=#{@item2.name}"
+
+      item = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(item["data"]["attributes"]["name"]).to eq(@item2.name)
+    end
+
+    it 'can find item by created at time' do
+      get "/api/v1/items/find?created_at=#{@item1.created_at}"
+
+      item = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(item["data"]["attributes"]["name"]).to eq(@item1.name)
+    end
+
+    it 'can find item by updated at time' do
+      get "/api/v1/items/find?updated_at=#{@item3.updated_at}"
+
+      item = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(item["data"]["attributes"]["name"]).to eq(@item3.name)
+    end
+
+    it 'can find item by description' do
+      get "/api/v1/items/find?description=#{@item4.description}"
+
+      item = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(item["data"]["attributes"]["name"]).to eq(@item4.name)
+    end
+
+    it 'can find item by unit price' do
+      get "/api/v1/items/find?unit_price=55"
+
+      item = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(item["data"]["attributes"]["name"]).to eq(@item1.name)
+    end
+
+    it 'can find item by merchant id' do
+      get "/api/v1/items/find?merchant_id=#{@item2.merchant_id}"
+
+      item = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(item["data"]["attributes"]["name"]).to eq(@item2.name)
+    end
+  end
+
   describe 'biz intel methods' do
     before :each do
       @merch1 = create(:merchant)
